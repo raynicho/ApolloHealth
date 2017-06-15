@@ -1,6 +1,8 @@
 from django.http import HttpResponse
 import datetime
 
+def index(request):
+	return(HttpResponse("Hello from Apollo Health."))
 
 '''
 Effects: Gets the schedule for a given doctor and patient.
