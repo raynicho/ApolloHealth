@@ -37,18 +37,18 @@ def populate_db(request):
 	D3.save()
 
 	# Populate with Users.
-	U1 = User(name="John Doe", address="2401 Troost Ave, Kansas City, MO 64108", pharmacy=P1, doctor_id=D3)
+	U1 = User(name="John Doe", address="2401 Troost Ave, Kansas City, MO 64108", pharmacy=P1, doctor=D3)
 	U1.save()
 
-	U2 = User(name="Jane Doe", address="10236 Marion Park Dr, Kansas City, MO 64137", pharmacy=P6, doctor_id=D2)
+	U2 = User(name="Jane Doe", address="10236 Marion Park Dr, Kansas City, MO 64137", pharmacy=P6, doctor=D2)
 	U2.save()
 
 	# Populate with Prescriptions.
-	S1 = Prescription(refills=4, dosage="5 mg", warnings="None.", name="Advil", user_id=U1)
+	S1 = Prescription(refills=4, dosage="5 mg", warnings="None.", name="Advil", user=U1)
 	S1.save()
 
 	# Populate with Events.
-	E1 = Event(doctor_id= D3, user_id=U1, date="06/31/2017", time="09:30:00")
+	E1 = Event(doctor= D3, user=U1, date="06/31/2017", start_time="09:30:00", end_time="10:15:00", event_name="Check Up")
 	E1.save()
 	return HttpResponse("DB populated.")
 '''
@@ -65,13 +65,15 @@ Output: json object with two arrays, one for doctor and one for patient.
 			"doctor_schedule": [
 				{
 					"date": "00/00/0000",
-					"time": "00:00:00"
+					"start_time": "00:00:00",
+					"end_time": "00:00:00"
 				}
 			],
 			"patient_schedule": [
 				{
 					"date": "00/00/0000",
 					"time": "00:00:00",
+					"end_time": "00:00:00",
 					"event_name": "name"
 				}
 			]

@@ -19,17 +19,19 @@ class User(models.Model):
 	name = models.CharField(max_length=128)
 	address = models.CharField(max_length=200)
 	pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
-	doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+	doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
 
 class Prescription(models.Model):
 	refills = models.IntegerField(default=0)
 	dosage = models.CharField(max_length=128)
 	warnings = models.CharField(max_length=128)
 	name = models.CharField(max_length=128)
-	user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Event(models.Model):
-	doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
-	user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+	doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
 	date = models.CharField(max_length=128)
-	time = models.CharField(max_length=128)
+	start_time = models.CharField(max_length=128)
+	end_time = models.CharField(max_length=128)
+	event_name = models.CharField(max_length=128)
