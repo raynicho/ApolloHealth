@@ -38,3 +38,30 @@ To start the server, do the following:
 2. Inside the directory: $ python manage.py runserver 0.0.0.0:3000
 
 3. Access the site in your web browser at: http://localhost:3000/
+
+## Our Models and Populating Them
+
+### Models Overview
+
+1. **Pharmacy**: auto increment id, address, name
+
+2. **Doctor**: auto increment id, name, address, specialty, days available, times available
+
+3. **User**: auto increment id, name, address, pharmacy foreign key, doctor foreign key
+
+4. **Prescription**: refills number, dosage description, warnings, name, user foreign key
+
+5. **Event**: doctor foreign key, user foreign key, date, start time, end time
+
+
+### Populating the Tables
+
+The table should already be fully populated. If you wish to populate it more, uncomment the populate_db method in views.py and change it as you wish. Then uncomment the route in the urls.py, start the server, and navigate to "localhost:3000/populate". This will apply your populations. **Make sure not to populate the table with duplicates.**
+
+### Viewing the Tables
+
+If you wish to easily view your sqlite3 table, this (http://inloop.github.io/sqlite-viewer/) allows you to drop the db.sqlite3 file and view the tables.
+
+### Resetting the Tables
+
+If you wish to reset the tables because you made a models change or you wish to cleanse the data, delete the db.sqlite3 file and run **python manage.py syncdb** to sync the database. I leave username and email blank, **root** as password.
