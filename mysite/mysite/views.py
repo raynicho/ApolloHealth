@@ -27,13 +27,13 @@ def populate_db(request):
 	P6.save()
 
 	# Populate with Doctors.
-	D1 = Doctor(name="Doctor Seuss", address="2301 Holmes St, Kansas City, MO 64108", specialty="General")
+	D1 = Doctor(name="Doctor Seuss", address="2301 Holmes St, Kansas City, MO 64108", specialty="General", days_available="M-W-F", times_available="8:00:00-7:00:00")
 	D1.save()
 
-	D2 = Doctor(name="Doctor Miranda Bailey", address="6420 Prospect Ave #102, Kansas City, MO 64131", specialty="General")
+	D2 = Doctor(name="Doctor Miranda Bailey", address="6420 Prospect Ave #102, Kansas City, MO 64131", specialty="General", days_available="M-T-W-F", times_available="9:00:00-5:00:00")
 	D2.save()
 
-	D3 = Doctor(name="Doctor John Dorian", address="4320 Wornall Rd #610, Kansas City, MO 64111", specialty="General")
+	D3 = Doctor(name="Doctor John Dorian", address="4320 Wornall Rd #610, Kansas City, MO 64111", specialty="General", days_available="M-T-W-TH-F", times_available="9:00:00-4:30:00")
 	D3.save()
 
 	# Populate with Users.

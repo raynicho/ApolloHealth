@@ -11,6 +11,8 @@ class Doctor(models.Model):
 	name = models.CharField(max_length=128)
 	address = models.CharField(max_length=200)
 	specialty = models.CharField(max_length=128)
+	days_available = models.CharField(max_length=128)
+	times_available = models.CharField(max_length=128)
 
 class User(models.Model):
 	user_id = models.AutoField(primary_key=True)
