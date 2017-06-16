@@ -1,9 +1,181 @@
 from django.http import HttpResponse
-import datetime
+from django.views.decorators.csrf import csrf_exempt
 from models import *
+
+import json
 
 def index(request):
 	return HttpResponse("Hello from Apollo Health.")
+
+'''
+Effects: Gets the schedule for a given doctor and patient.
+Input: doctor=<doctor_id>, user=<user_id>
+Output: json object with two arrays, one for doctor and one for patient.
+		{
+			"doctor_schedule": [
+				{
+					"date": "00/00/0000",
+					"start_time": "00:00:00",
+					"end_time": "00:00:00"
+				}
+			],
+			"patient_schedule": [
+				{
+					"date": "00/00/0000",
+					"time": "00:00:00",
+					"end_time": "00:00:00",
+					"event_name": "name"
+				}
+			]
+		}
+'''
+def get_total_schedule(request):
+	return 0
+
+'''
+Gets the schedule for a given patient.
+Input: user=<user_id>
+Output: json object with one array for patient schedule.
+		{
+			"patient_schedule": [
+				{
+					"date": "00/00/0000",
+					"time": "00:00:00"
+				}
+			]
+		}
+'''
+def get_patient_schedule(request):
+	return 0
+
+'''
+Gets the schedule for a given doctor.
+Input: doctor=<doctor_id>
+Output: json object with one array for patient schedule.
+		{
+			"doctor_schedule": [
+				{
+					"date": "00/00/0000",
+					"time": "00:00:00"
+				}
+			]
+		}
+'''
+def get_doctor_schedule(request):
+	return 0
+
+'''
+Queries every table for the given word and returns all matching things.
+Input: word=<this>
+Output: json object containing arrays for possible matches.
+		{
+			"doctors": [
+				{
+					"name": "John Doe",
+					"id": "1234",
+					"location": 
+						{
+							"lat:": "42.00",
+							"long": "42.00"
+						},
+					"address": "123 Main St., Kansas City, MO 64108"
+				}
+			],
+			"medications": [
+				{
+					"name": "Advil",
+					"price": "13.99",
+					"id": "1234"
+				}
+			],
+			"pharmacies": [
+				{
+					"name": "KC CVS",
+					"id": "1234",
+					"location":
+						{
+							"lat:": "42.00",
+							"long": "42.00"
+						},
+					"address": "123 Main St., Kansas City, MO 64108"
+				}
+			]
+		}
+'''
+def get_word(request):
+	return 0
+
+'''
+Takes in an address and returns the latitiude, longitude of the address.
+Input: address=<123 Main St., Kansas City, MO 64108>
+Output: json object of latitude and longitude.
+		{
+			"latitude": "42.00",
+			"longitude": "42.00"
+		}
+'''
+def get_lat_long(request):
+	return 0
+
+'''
+Handles all CRED requests for pharmacy objects.
+Request Types:
+	GET (nil): All pharmacies.
+	GET (pharmacy_id): Pharmacy with that pharmacy_id.
+
+	PUT (address, name): Creates a pharmacy.
+
+	DELETE (pharmacy_id): Deletes the pharmacy with the given pharmacy_id.
+
+	POST (pharmacy_id, address, name): Edits the pharmacy.
+'''
+@csrf_exempt
+def pharmacy(request):
+	# GET 
+	if request.method == "GET":
+		if request.GET.get('pharmacy_id', '') == '':
+			if not Pharmacy.objects.filter().exists():
+				return HttpResponse(json.dumps({"error":"No pharmacies found."}), content_type="application/json", status=404)
+
+			obj = Pharmacy.objects.filter()
+			pharm_array = []
+			for pharm in obj:
+				data = {
+        			"pharmacy_id": pharm.pharmacy_id,
+        			"address": pharm.address,
+        			"name":  pharm.name
+    			}
+    			print data
+    			pharm_array.append(data)
+			response_data = {
+				"pharmacies": pharm_array
+			}
+			return HttpResponse(json.dumps(response_data), content_type="application/json")
+		else:
+			pharmacy_id = request.GET.get('pharmacy_id', '')
+
+			if not Pharmacy.objects.filter(pharmacy_id=pharmacy_id).exists():
+				return HttpResponse(json.dumps({"error":"No pharmacy found."}), content_type="application/json", status=404)
+
+			obj = Pharmacy.objects.get(pk=pharmacy_id)
+			response_data = {
+        		"pharmacy_id": pharmacy_id,
+        		"address": obj.address,
+        		"name":  obj.name
+    		}
+    		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	# PUT
+	elif request.method == "PUT":
+		return HttpResponse("PUT")
+	# DELETE
+	elif request.method == "DELETE":
+		return HttpResponse("DELETE")
+	# POST
+	elif request.method == "POST":
+		return HttpResponse("POST")
+	# UNIDENTIFIED
+	return HttpResponse("Unidentified API request method.")
+
 
 '''
 def populate_db(request):
@@ -52,129 +224,3 @@ def populate_db(request):
 	E1.save()
 	return HttpResponse("DB populated.")
 '''
-
-'''
-Effects: Gets the schedule for a given doctor and patient.
-Input: json object with doctor id and patient id. 
-		{
-			"doctor":"doctor_id",
-			"user":"user_id"
-		}
-Output: json object with two arrays, one for doctor and one for patient.
-		{
-			"doctor_schedule": [
-				{
-					"date": "00/00/0000",
-					"start_time": "00:00:00",
-					"end_time": "00:00:00"
-				}
-			],
-			"patient_schedule": [
-				{
-					"date": "00/00/0000",
-					"time": "00:00:00",
-					"end_time": "00:00:00",
-					"event_name": "name"
-				}
-			]
-		}
-'''
-def get_total_schedule(request):
-	return 0
-
-'''
-Gets the schedule for a given patient.
-Input: json object patient id. 
-		{
-			"user":"user_id"
-		}
-Output: json object with one array for patient schedule.
-		{
-			"patient_schedule": [
-				{
-					"date": "00/00/0000",
-					"time": "00:00:00"
-				}
-			]
-		}
-'''
-def get_patient_schedule(request):
-	return 0
-
-'''
-Gets the schedule for a given doctor.
-Input: json object patient id. 
-		{
-			"doctor":"doctor_id"
-		}
-Output: json object with one array for patient schedule.
-		{
-			"doctor_schedule": [
-				{
-					"date": "00/00/0000",
-					"time": "00:00:00"
-				}
-			]
-		}
-'''
-def get_doctor_schedule(request):
-	return 0
-
-'''
-Queries every table for the given word and returns all matching things.
-Input: json object containing the word being queried for.
-		{
-			"word": "this"
-		}
-Output: json object containing arrays for possible matches.
-		{
-			"doctors": [
-				{
-					"name": "John Doe",
-					"id": "1234",
-					"location": 
-						{
-							"lat:": "42.00",
-							"long": "42.00"
-						},
-					"address": "123 Main St., Kansas City, MO 64108"
-				}
-			],
-			"medications": [
-				{
-					"name": "Advil",
-					"price": "13.99",
-					"id": "1234"
-				}
-			],
-			"pharmacies": [
-				{
-					"name": "KC CVS",
-					"id": "1234",
-					"location":
-						{
-							"lat:": "42.00",
-							"long": "42.00"
-						},
-					"address": "123 Main St., Kansas City, MO 64108"
-				}
-			]
-		}
-'''
-def get_word(request):
-	return 0
-
-'''
-Takes in an address and returns the latitiude, longitude of the address.
-Input: json object of an address.
-		{
-			"address": "123 Main St., Kansas City, MO 64108"
-		}
-Output: json object of latitude and longitude.
-		{
-			"latitude": "42.00",
-			"longitude": "42.00"
-		}
-'''
-def get_lat_long(request):
-	return 0
