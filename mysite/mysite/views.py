@@ -1,8 +1,57 @@
 from django.http import HttpResponse
 import datetime
+from models import *
 
 def index(request):
-	return(HttpResponse("Hello from Apollo Health."))
+	return HttpResponse("Hello from Apollo Health.")
+
+'''
+def populate_db(request):
+	# Populate with Pharmacies.
+	P1 = Pharmacy(address="300 W 19 Terrace, Kansas City, MO 64108", name="Walgreens Pharmacy")
+	P1.save()
+
+	P2 = Pharmacy(address="241 Linwood Blvd, Kansas City, MO 64111", name="Costco Pharmacy")
+	P2.save()
+
+	P3 = Pharmacy(address="3537 Broadway, Kansas City, MO 64111", name="Walgreens Pharmacy")
+	P3.save()
+
+	P4 = Pharmacy(address="3801 Independence Ave, Kansas City, MO 64124", name="Spalitto's Pharmacy")
+	P4.save()
+
+	P5 = Pharmacy(address="712 Westport Rd, Kansas City, MO 64111", name="Triad")
+	P5.save()
+
+	P6 = Pharmacy(address="4240 SW Trafficway, Kansas City, MO 64111", name="Rockhill Pharmacy")
+	P6.save()
+
+	# Populate with Doctors.
+	D1 = Doctor(name="Doctor Seuss", address="2301 Holmes St, Kansas City, MO 64108", specialty="General")
+	D1.save()
+
+	D2 = Doctor(name="Doctor Miranda Bailey", address="6420 Prospect Ave #102, Kansas City, MO 64131", specialty="General")
+	D2.save()
+
+	D3 = Doctor(name="Doctor John Dorian", address="4320 Wornall Rd #610, Kansas City, MO 64111", specialty="General")
+	D3.save()
+
+	# Populate with Users.
+	U1 = User(name="John Doe", address="2401 Troost Ave, Kansas City, MO 64108", pharmacy=P1, doctor_id=D3)
+	U1.save()
+
+	U2 = User(name="Jane Doe", address="10236 Marion Park Dr, Kansas City, MO 64137", pharmacy=P6, doctor_id=D2)
+	U2.save()
+
+	# Populate with Prescriptions.
+	S1 = Prescription(refills=4, dosage="5 mg", warnings="None.", name="Advil", user_id=U1)
+	S1.save()
+
+	# Populate with Events.
+	E1 = Event(doctor_id= D3, user_id=U1, date="06/31/2017", time="09:30:00")
+	E1.save()
+	return HttpResponse("DB populated.")
+'''
 
 '''
 Effects: Gets the schedule for a given doctor and patient.
