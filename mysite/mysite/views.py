@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from models import *
+import googlemaps
 
 import json
 
@@ -114,8 +115,19 @@ Output: json object of latitude and longitude.
 			"longitude": "42.00"
 		}
 '''
+# maps api key = AIzaSyCCM6JhqOsTmEemINp5USl0DJ34RgI54yo
 def get_lat_long(request):
-	return 0
+	address = request.GET.get('address', '')
+	gClient = googlemaps.Client(key="AIzaSyCCM6JhqOsTmEemINp5USl0DJ34RgI54yo")
+	geocoded = gClient.geocode(address)
+	data = {
+		"lat": geocoded[0]["geometry"]["location"]["lat"],
+		"long": geocoded[0]["geometry"]["location"]["lng"]
+	}
+	#if geocoded["geometry"] is None:
+	#return HttpResponse("Error")
+	#lat = geocoded["geometry"]["location"]["lat"]
+	return HttpResponse(json.dumps(data), content_type= "application/json")
 
 '''
 Handles all CRED requests for pharmacy objects.

@@ -1,4 +1,3 @@
-from mongoengine import *
 from django.db import models
 
 class Pharmacy(models.Model):
