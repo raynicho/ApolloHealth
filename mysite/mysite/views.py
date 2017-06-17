@@ -120,14 +120,17 @@ def get_lat_long(request):
 	address = request.GET.get('address', '')
 	gClient = googlemaps.Client(key="AIzaSyCCM6JhqOsTmEemINp5USl0DJ34RgI54yo")
 	geocoded = gClient.geocode(address)
-	data = {
-		"lat": geocoded[0]["geometry"]["location"]["lat"],
-		"long": geocoded[0]["geometry"]["location"]["lng"]
-	}
-	#if geocoded["geometry"] is None:
-	#return HttpResponse("Error")
-	#lat = geocoded["geometry"]["location"]["lat"]
-	return HttpResponse(json.dumps(data), content_type= "application/json")
+	if len(geocoded) > 0:
+		data = {
+			"lat": geocoded[0]["geometry"]["location"]["lat"],
+			"long": geocoded[0]["geometry"]["location"]["lng"]
+		}
+		#if geocoded["geometry"] is None:
+		#return HttpResponse("Error")
+		#lat = geocoded["geometry"]["location"]["lat"]
+		return HttpResponse(json.dumps(data), content_type= "application/json")
+	else:
+		return HttpResponse(json.dumps({"error": "Could not find lat/long for address."}), content_type="application/json", status=404)
 
 '''
 Handles all CRED requests for pharmacy objects.
