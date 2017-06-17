@@ -46,5 +46,10 @@ urlpatterns = [
     url(r'^delete_event/', views.delete_event, name="delete_event"),
     url(r'^edit_event/', views.edit_event, name="edit_event"),
 
+    url(r'^get_pharm_event/', views.get_pharm_event, name="get_pharm_event"),
+    url(r'^create_pharm_event/', views.create_pharm_event, name="create_pharm_event"),
+    url(r'^delete_pharm_event/', views.delete_pharm_event, name="delete_pharm_event"),
+    url(r'^edit_pharm_event/', views.edit_pharm_event, name="edit_pharm_event"),
+
     url(r'^admin/', admin.site.urls),
 ]

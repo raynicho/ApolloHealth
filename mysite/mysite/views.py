@@ -36,12 +36,16 @@ def get_pharmacy(request):
 
 		pharm_array = []
 		i = -1
-		for pharm in Pharmacy.objects.all():
+		for obj in Pharmacy.objects.all():
 			i += 1
 			pharm_array.append({
-				"pharmacy_id": pharm.pharmacy_id,
-				"address": pharm.address,
-				"name": pharm.name
+				"pharmacy_id": obj.pharmacy_id,
+				"address": obj.address,
+				"name":  obj.name,
+				"long": str(obj.lon),
+				"lat": str(obj.lat),
+				"phone": obj.phone,
+				"rating": str(obj.rating)
 			})
 		response_data = {
 			"pharmacies": pharm_array
@@ -57,7 +61,11 @@ def get_pharmacy(request):
 		response_data = {
 			"pharmacy_id": pharmacy_id,
 			"address": obj.address,
-			"name":  obj.name
+			"name":  obj.name,
+			"long": str(obj.lon),
+			"lat": str(obj.lat),
+			"phone": obj.phone,
+			"rating": str(obj.rating)
 		}
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse("Unidentified API request method or input parameters.")
@@ -69,10 +77,10 @@ Request Types:
 '''
 @csrf_exempt
 def create_pharmacy(request):
-	if request.GET.get('name', '') == '' or request.GET.get('address', '') == '':
+	if request.GET.get('name', '') == '' or request.GET.get('address', '') == '' or request.GET.get('lon', '') == '' or request.GET.get('lat', '') == '' or request.GET.get('phone', '') == '' or request.GET.get('rating', '') == '':
 		return HttpResponse(json.dumps({"error":"Missing name and/or address params."}), content_type="application/json", status=400)
 	elif request.GET.get('address', '') != '' and request.GET.get('name', '') != '':
-		P = Pharmacy(address=request.GET.get('address', ''), name=request.GET.get('name', ''))
+		P = Pharmacy(address=request.GET.get('address', ''), name=request.GET.get('name', ''), lon=request.GET.get('lon', ''), lat=request.GET.get('lat', ''), phone=request.GET.get('phone', ''), rating=request.GET.get('rating', '') == '')
 		P.save()
 
 		return HttpResponse(json.dumps({"status":"Pharmacy created."}), content_type="application/json")
@@ -160,7 +168,7 @@ def get_doctor(request):
 '''
 Handles creating doctors.
 Request Types:
-	GET (address, nam, specialty, days_available, times_available): Creates a doctor.
+	GET (address, name, specialty, days_available, times_available): Creates a doctor.
 '''
 @csrf_exempt
 def create_doctor(request):
@@ -572,4 +580,112 @@ def delete_event(request):
 		return HttpResponse(json.dumps({"error":"No events found."}), content_type="application/json", status=404)
 
 	Event.objects.filter(pk=event_id).delete()
+	return HttpResponse(json.dumps({"status":"Event deleted."}), content_type="application/json")
+
+'''
+Handles getting pharmacy events.
+Request Types:
+	GET (nil): All pharmacy events.
+	GET (pharm_event_id): Event with that pharm_event_id.
+	GET (user_id): All events for that user.
+'''
+@csrf_exempt
+def get_pharm_event(request):
+	if request.GET.get('pharm_event_id', '') == '' and request.GET.get('user_id', '') == '':
+		if not PharmacyEvent.objects.filter().exists():
+			return HttpResponse(json.dumps({"pharmacy_events":[]}), content_type="application/json", status=200)
+
+		event_array = []
+		for event in PharmacyEvent.objects.all():
+			event_array.append({
+				"pharmacy_id": event.pharmacy_id,
+				"user_id": event.user_id,
+				"date": event.date,
+				"pickup_time": event.pickup_time,
+				"name": event.event_name,
+				"pharm_event_id": event.pharm_event_id
+			})
+		response_data = {
+			"events": event_array
+		}
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	elif request.GET.get('user_id', '') != '':
+		event_array = []
+		for event in PharmacyEvent.objects.filter(user_id=request.GET.get('user_id', '')):
+			event_array.append({
+				"pharmacy_id": event.pharmacy_id,
+				"user_id": event.user_id,
+				"date": event.date,
+				"pickup_time": event.pickup_time,
+				"name": event.event_name,
+				"pharm_event_id": event.pharm_event_id
+			})
+		response_data = {
+			"pharmacy_events": event_array
+		}
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	else:
+		event_id = request.GET.get('pharm_event_id', '')
+
+		if not PharmacyEvent.objects.filter(pk=event_id).exists():
+			return HttpResponse(json.dumps({"error":"No event found."}), content_type="application/json", status=404)
+
+		event = PharmacyEvent.objects.get(pk=event_id)
+		response_data = {
+			"pharmacy_id": event.pharmacy_id,
+			"user_id": event.user_id,
+			"date": event.date,
+			"pickup_time": event.pickup_time,
+			"name": event.event_name,
+			"pharm_event_id": event.pharm_event_id
+		}
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	return HttpResponse("Unidentified API request method or input parameters.")
+
+'''
+Handles creating pharmacy events.
+Request Types:
+	GET (user_id, name, pharmacy_id, date, pickup_time): Creates a pharmacy event.
+'''
+@csrf_exempt
+def create_pharm_event(request):
+	if request.GET.get('pharmacy_id', '') == '' or request.GET.get('user_id', '') == '' or request.GET.get('date', '') == '' or request.GET.get('pickup_time', '') == '' or request.GET.get('name', '') == '':
+		return HttpResponse(json.dumps({"error":"Missing params."}), content_type="application/json", status=400)
+	
+	E = PharmacyEvent(user_id=request.GET.get('user_id', ''), event_name=request.GET.get('name', ''), pharmacy_id=request.GET.get('pharmacy_id', ''), date=request.GET.get('date', ''), pickup_time=request.GET.get('pickup_time', ''))
+	E.save()
+
+	return HttpResponse(json.dumps({"status":"Event created."}), content_type="application/json")
+
+'''
+Handles editing events.
+Request Types:
+	GET (pharm_event_id, user_id, name, pharmacy_id, date, start_time, end_time): Edits an event.
+'''
+@csrf_exempt
+def edit_pharm_event(request):
+	if request.GET.get('pharm_event_id', '') == '' or request.GET.get('pharmacy_id', '') == '' or request.GET.get('user_id', '') == '' or request.GET.get('date', '') == ''  or request.GET.get('pickup_time', '') == '' or request.GET.get('name', '') == '':
+		return HttpResponse(json.dumps({"error":"One or more parameters mssing."}), content_type="application/json", status=400)
+	
+	event_id = request.GET.get('pharm_event_id', '')
+	if not PharmacyEvent.objects.filter(pk=event_id).exists():
+		return HttpResponse(json.dumps({"error":"No events found."}), content_type="application/json", status=404)
+
+	PharmacyEvent.objects.filter(pk=event_id).update(user=request.GET.get('user_id', ''), event_name=request.GET.get('name', ''), pharmacy=request.GET.get('pharmacy_id', ''), date=request.GET.get('date', ''), pickup_time=request.GET.get('pickup_time', ''))
+	return HttpResponse(json.dumps({"status":"Event updated."}), content_type="application/json")
+
+'''
+Handles deleting a pharmacy event.
+Request Types:
+	GET (pharm_event_id): Deletes an event.
+'''
+@csrf_exempt
+def delete_pharm_event(request):
+	if request.GET.get('pharm_event_id', '') == '':
+		return HttpResponse(json.dumps({"error":"No parameters entered."}), content_type="application/json", status=400)
+	event_id = request.GET.get('pharm_event_id', '')
+	if not PharmacyEvent.objects.filter(pk=event_id).exists():
+		return HttpResponse(json.dumps({"error":"No events found."}), content_type="application/json", status=404)
+
+	PharmacyEvent.objects.filter(pk=event_id).delete()
 	return HttpResponse(json.dumps({"status":"Event deleted."}), content_type="application/json")

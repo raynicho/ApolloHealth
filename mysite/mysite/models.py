@@ -4,6 +4,10 @@ class Pharmacy(models.Model):
 	pharmacy_id = models.AutoField(primary_key=True)
 	address = models.CharField(max_length=200)
 	name = models.CharField(max_length=128)
+	phone = models.CharField(max_length=128)
+	lon = models.DecimalField(max_digits=9,decimal_places=6)
+	lat = models.DecimalField(max_digits=9,decimal_places=6)
+	rating = models.DecimalField(max_digits=4,decimal_places=2)
 
 class Doctor(models.Model):
 	doctor_id = models.AutoField(primary_key=True)
@@ -33,4 +37,12 @@ class Event(models.Model):
 	date = models.CharField(max_length=128)
 	start_time = models.CharField(max_length=128)
 	end_time = models.CharField(max_length=128)
+	event_name = models.CharField(max_length=128)
+
+class PharmacyEvent(models.Model):
+	pharm_event_id = models.AutoField(primary_key=True)
+	pharmacy = models.ForeignKey(Pharmacy, on_delete=models.CASCADE)
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	date = models.CharField(max_length=128)
+	pickup_time = models.CharField(max_length=128)
 	event_name = models.CharField(max_length=128)
