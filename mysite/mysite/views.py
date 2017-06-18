@@ -143,7 +143,7 @@ def get_doctor(request):
 				"days_available": doc.days_available,
 				"times_available": doc.times_available,
 				"lon": str(doc.lon),
-				"late": str(doc.lat)
+				"lat": str(doc.lat)
 			})
 		response_data = {
 			"doctors": doc_array
@@ -162,7 +162,7 @@ def get_doctor(request):
 				"days_available": doc.days_available,
 				"times_available": doc.times_available,
 				"lon": str(doc.lon),
-				"late": str(doc.lat)
+				"lat": str(doc.lat)
 			})
 		response_data = {
 			"doctors": doc_array
@@ -183,7 +183,7 @@ def get_doctor(request):
 			"days_available": doc.days_available,
 			"times_available": doc.times_available,
 			"lon": str(doc.lon),
-			"late": str(doc.lat)
+			"lat": str(doc.lat)
 		}
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse("Unidentified API request method or input parameters.")
