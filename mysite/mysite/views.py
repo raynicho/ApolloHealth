@@ -127,13 +127,32 @@ Request Types:
 '''
 @csrf_exempt
 def get_doctor(request):
-	if request.GET.get('doctor_id', '') == '':
+	if request.GET.get('doctor_id', '') == '' and request.GET.get('specialty', '') == '':
 		if not Doctor.objects.filter().exists():
 			return HttpResponse(json.dumps({"error":"No doctors found."}), content_type="application/json", status=404)
 
 		doc_array = []
 		i = -1
 		for doc in Doctor.objects.all():
+			i += 1
+			doc_array.append({
+				"doctor_id": doc.doctor_id,
+				"address": doc.address,
+				"name": doc.name,
+				"specialty": doc.specialty,
+				"days_available": doc.days_available,
+				"times_available": doc.times_available,
+				"lon": str(doc.lon),
+				"late": str(doc.lat)
+			})
+		response_data = {
+			"doctors": doc_array
+		}
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	elif request.GET.get('specialty', '') != '':
+		doc_array = []
+		i = -1
+		for doc in Doctor.objects.filter(specialty=request.GET.get('specialty', '')):
 			i += 1
 			doc_array.append({
 				"doctor_id": doc.doctor_id,
