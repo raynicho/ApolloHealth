@@ -131,3 +131,17 @@ All routes return a json object.
 **/edit_event/?event_id=Z&user_id=X&name=Name&doctor_id=Y&date=00-00-0000&start_time=00:00:00&end_time=00:00:00**: Edits an event.
 
 **/delete_event/?event_id=X**: Deletes an event.
+
+### Pharmacy Event Routes
+
+**/get_pharm_event/**: Gets all pharmacy events.
+
+**/get_pharm_event/?user_id=X**: Gets all pharmacy events for a given user.
+
+**/get_pharm_event/?pharm_event_id=X**: Gets a pharmacy event.
+
+**/create_pharm_event/?user_id=X&name=Name&pharmacy_id=Y&date=00/00/0000&pickup_time=00:00:00**: Creates a pharmacy event.
+
+**/create_pharm_event/?pharm_event_id=Z&user_id=X&name=Name&pharmacy_id=Y&date=00/00/0000&pickup_time=00:00:00**: Edits a pharmacy event.
+
+**/delete_pharm_event/?pharm_event_id=X**: Deletes a pharmacy event.
