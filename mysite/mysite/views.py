@@ -141,7 +141,9 @@ def get_doctor(request):
 				"name": doc.name,
 				"specialty": doc.specialty,
 				"days_available": doc.days_available,
-				"times_available": doc.times_available
+				"times_available": doc.times_available,
+				"lon": str(doc.lon),
+				"late": str(doc.lat)
 			})
 		response_data = {
 			"doctors": doc_array
@@ -160,7 +162,9 @@ def get_doctor(request):
 			"name": doc.name,
 			"specialty": doc.specialty,
 			"days_available": doc.days_available,
-			"times_available": doc.times_available
+			"times_available": doc.times_available,
+			"lon": str(doc.lon),
+			"late": str(doc.lat)
 		}
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse("Unidentified API request method or input parameters.")
@@ -168,14 +172,14 @@ def get_doctor(request):
 '''
 Handles creating doctors.
 Request Types:
-	GET (address, name, specialty, days_available, times_available): Creates a doctor.
+	GET (address, name, specialty, days_available, times_available, lon, lat): Creates a doctor.
 '''
 @csrf_exempt
 def create_doctor(request):
-	if request.GET.get('name', '') == '' or request.GET.get('address', '') == '' or request.GET.get('specialty', '') == '' or request.GET.get('times_available', '') == '' or request.GET.get('days_available', '') == '':
+	if request.GET.get('lon', '') == '' or request.GET.get('lat', '') == '' or request.GET.get('name', '') == '' or request.GET.get('address', '') == '' or request.GET.get('specialty', '') == '' or request.GET.get('times_available', '') == '' or request.GET.get('days_available', '') == '':
 		return HttpResponse(json.dumps({"error":"Missing params."}), content_type="application/json", status=400)
 	
-	D = Doctor(address=request.GET.get('address', ''), name=request.GET.get('name', ''), specialty=request.GET.get('specialty', ''), times_available=request.GET.get('times_available', ''), days_available=request.GET.get('days_available', ''))
+	D = Doctor(address=request.GET.get('address', ''), name=request.GET.get('name', ''), specialty=request.GET.get('specialty', ''), times_available=request.GET.get('times_available', ''), days_available=request.GET.get('days_available', ''), lon=request.GET.get('lon', ''), lat=request.GET.get('lat', ''))
 	D.save()
 
 	return HttpResponse(json.dumps({"status":"Doctor created."}), content_type="application/json")
@@ -703,6 +707,6 @@ def populate_doctors(request):
 	clean = [{"name": "HCA Midwest Physicians", "address": "903 E 104th St #500, Kansas City, MO 64131, United States", "specialty": "Orthopedic", "long": "-94.5810628", "lat": "38.9380067", "days_avalible": "MTWRF", "times_avail": "a59992f9-986e-39c5-9562-1495d08c4374"}, {"name": "Medical Group of Kansas City", "address": "6675 Holmes Rd #550, Kansas City, MO 64131, United States", "specialty": "Family", "long": "-94.577989", "lat": "39.0064874", "days_avalible": "MTWRF", "times_avail": "87e18e2f-c4af-308f-b86a-3fdc4fc7652f"}, {"name": "Midtown Family Medicine, Gary A. Thompson, MD", "address": "3406 Broadway, Kansas City, MO 64111, United States", "specialty": "Neurology", "long": "-94.59064629999999", "lat": "39.0662657", "days_avalible": "MTWRF", "times_avail": "a17cb649-27bc-3c33-810b-1d2bfe6f1e66"}, {"name": "Discover Vision Centers in North Kansas City", "address": "9401 N Oak Trafficway #200, Kansas City, MO 64155, United States", "specialty": "Anesthesiology", "long": "-94.57524400000001", "lat": "39.264681", "days_avalible": "MTWRF", "times_avail": "933385d1-5dcc-32a1-b3fb-12dd6f7c2b25"}, {"name": "Medical Group of Kansas City at Research Medical Center Main Campus", "address": "6420 Prospect Ave #102, Kansas City, MO 64131, United States", "specialty": "Pathology", "long": "-94.5562985", "lat": "39.0099747", "days_avalible": "MTWRF", "times_avail": "49a83bb7-ecbf-31f8-83b1-5b79a18608ac"}, {"name": "Consultants in Gastroenterology, P.C.", "address": "5330 N Oak Trafficway Suite 102, Kansas City, MO 64118, United States", "specialty": "Allergy", "long": "-94.5769832", "lat": "39.1912489", "days_avalible": "MTWRF", "times_avail": "adf97d16-172e-304b-91c2-e10aeb9a3f3c"}, {"name": "Goppert-Trinity Family Care", "address": "6675 Holmes Rd #360, Kansas City, MO 64131, United States", "specialty": "Anesthesiology", "long": "-94.5778717", "lat": "39.00707130000001", "days_avalible": "MTWRF", "times_avail": "08ddc5ff-939c-3cbb-b9b3-694451126917"}, {"name": "Erickson Neal A MD", "address": "1004 Carondelet Dr #300a, Kansas City, MO 64114, United States", "specialty": "Pathology", "long": "-94.60159589999999", "lat": "38.935677", "days_avalible": "MTWRF", "times_avail": "591a0bfe-5f84-35ae-84d4-138f9d8d6bfb"}, {"name": "Midwest Women's Healthcare Specialists - Kansas City", "address": "5330 N Oak Trafficway #203, Kansas City, MO 64118, United States", "specialty": "Pathology", "long": "-94.5770261", "lat": "39.1912957", "days_avalible": "MTWRF", "times_avail": "7936b5e4-a389-30cd-9903-4509e6b9a60a"}, {"name": "Brookside Family Medical Group", "address": "7130 Wornall Rd, Kansas City, MO 64114, United States", "specialty": "Psychiatry", "long": "-94.594257", "lat": "38.9987149", "days_avalible": "MTWRF", "times_avail": "47132712-d8f0-3edc-bb2e-380c088e4aa2"}, {"name": "Kansas City Foot and Ankle", "address": "1010 Carondelet Dr, Kansas City, MO 64114, United States", "specialty": "Pathology", "long": "-94.604822", "lat": "38.93594099999999", "days_avalible": "MTWRF", "times_avail": "c396ba7e-1ef1-35ae-9e64-a4828c3c4d8b"}, {"name": "Primary Care North", "address": "5861 NW 72nd St, Kansas City, MO 64151, United States", "specialty": "Pathology", "long": "-94.6484436", "lat": "39.2239919", "days_avalible": "MTWRF", "times_avail": "ec6202cf-fac8-3025-8a8a-20536b2f4c61"}, {"name": "Kansas City CARE Clinic", "address": "3515 Broadway, Kansas City, MO 64111, United States", "specialty": "Pediatrics", "long": "-94.5899304", "lat": "39.0633194", "days_avalible": "MTWRF", "times_avail": "a66c1dd1-6ff6-3bf1-8f13-7347c2951f09"}, {"name": "Midwest Heart and Vascular Specialists - Kansas City", "address": "2330 E Meyer Blvd #509, Kansas City, MO 64132, United States", "specialty": "Pathology", "long": "-94.55802229999999", "lat": "39.0086632", "days_avalible": "MTWRF", "times_avail": "8151cf5b-e862-32d5-96aa-d246e961e668"}, {"name": "Encompass Medical Group - Midtown Office", "address": "2340 E Meyer Blvd, Kansas City, MO 64132, United States", "specialty": "Allergy", "long": "-94.55791049999999", "lat": "39.0089514", "days_avalible": "MTWRF", "times_avail": "14396e8c-0e37-3275-aa66-062d95da0d29"}, {"name": "Neighorhood Walk-in and Family Care", "address": "5151 Troost Ave #200, Kansas City, MO 64110, United States", "specialty": "Emergency Medicine", "long": "-94.57307519999999", "lat": "39.0332361", "days_avalible": "MTWRF", "times_avail": "545610fd-f37a-3e06-8a18-c9760305ab07"}, {"name": "ENT Associates of Greater Kansas City, PC", "address": "1004 Carondelet Dr, Kansas City, MO 64114, United States", "specialty": "Pathology", "long": "-94.6040488", "lat": "38.9355437", "days_avalible": "MTWRF", "times_avail": "d432b6d9-71aa-3f74-8fc9-df4871665a98"}, {"name": "Mosaic Life Care at Shoal Creek", "address": "8880 NE 82nd Terrace, Kansas City, MO 64158, United States", "specialty": "Pediatrics", "long": "-94.4717735", "lat": "39.243818", "days_avalible": "MTWRF", "times_avail": "4fc9455c-1893-3f3b-bf51-18c62a99f9db"}, {"name": "Midwest Reproductive Center, PA", "address": "2750 Clay Edwards Dr Ste. 604, North Kansas City, MO 64116, United States", "specialty": "Pediatrics", "long": "-94.5525136", "lat": "39.15088650000001", "days_avalible": "MTWRF", "times_avail": "7629b08f-9db4-300e-bde4-68f474d4c643"}, {"name": "Briarcliff Medical Association: Stanley John O MD", "address": "5400 N Oak Trafficway # 200, Kansas City, MO 64118, United States", "specialty": "Family", "long": "-94.57708439999999", "lat": "39.1925653", "days_avalible": "MTWRF", "times_avail": "556e62ad-1efd-38d2-8877-7e3e7b3a9ba4"}]
 
 	for doc in clean:
-		D = Doctor(address=doc["address"], name=doc["name"], specialty=doc["specialty"], times_available=doc["times_avail"], days_available=doc["days_avalible"])
+		D = Doctor(address=doc["address"], name=doc["name"], specialty=doc["specialty"], times_available=doc["times_avail"], days_available=doc["days_avalible"], lat=doc["lat"], lon=doc["long"])
 		D.save()
 	return HttpResponse(json.dumps({"status":"Doctors populated."}), content_type="application/json")

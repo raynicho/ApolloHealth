@@ -16,6 +16,8 @@ class Doctor(models.Model):
 	specialty = models.CharField(max_length=128)
 	days_available = models.CharField(max_length=128)
 	times_available = models.CharField(max_length=128)
+	lon = models.DecimalField(max_digits=9,decimal_places=6)
+	lat = models.DecimalField(max_digits=9,decimal_places=6)
 
 class User(models.Model):
 	user_id = models.AutoField(primary_key=True)
