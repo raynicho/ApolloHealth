@@ -52,6 +52,7 @@ urlpatterns = [
     url(r'^edit_pharm_event/', views.edit_pharm_event, name="edit_pharm_event"),
 
     url(r'^popdoc/', views.populate_doctors),
+    url(r'^popuser/', views.populate_users),
     url(r'^poppharm/', views.populate_pharmacies),
 
     url(r'^admin/', admin.site.urls),
