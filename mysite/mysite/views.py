@@ -30,7 +30,7 @@ Request Types:
 '''
 @csrf_exempt
 def get_pharmacy(request):
-	if request.GET.get('pharmacy_id', '') == '':
+	if request.GET.get('pharmacy_id', '') == '' and request.GET.get('name', '') == '':
 		if not Pharmacy.objects.filter().exists():
 			return HttpResponse(json.dumps({"error":"No pharmacies found."}), content_type="application/json", status=404)
 
@@ -51,7 +51,7 @@ def get_pharmacy(request):
 			"pharmacies": pharm_array
 		}
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
-	else:
+	elif request.GET.get('pharmacy_id', '') != '':
 		pharmacy_id = request.GET.get('pharmacy_id', '')
 
 		if not Pharmacy.objects.filter(pk=pharmacy_id).exists():
@@ -66,6 +66,25 @@ def get_pharmacy(request):
 			"lat": str(obj.lat),
 			"phone": obj.phone,
 			"rating": str(obj.rating)
+		}
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	else:
+		name = request.GET.get('name', '')
+
+		pharm_array = []
+		for obj in Pharmacy.objects.all():
+			if name in obj.name:	
+				pharm_array.append({
+					"pharmacy_id": obj.pharmacy_id,
+					"address": obj.address,
+					"name":  obj.name,
+					"long": str(obj.lon),
+					"lat": str(obj.lat),
+					"phone": obj.phone,
+					"rating": str(obj.rating)
+				})
+		response_data = {
+			"pharmacies": pharm_array
 		}
 		return HttpResponse(json.dumps(response_data), content_type="application/json")
 	return HttpResponse("Unidentified API request method or input parameters.")
@@ -127,7 +146,7 @@ Request Types:
 '''
 @csrf_exempt
 def get_doctor(request):
-	if request.GET.get('doctor_id', '') == '' and request.GET.get('specialty', '') == '':
+	if request.GET.get('doctor_id', '') == '' and request.GET.get('specialty', '') == '' and request.GET.get('name', '') == '':
 		if not Doctor.objects.filter().exists():
 			return HttpResponse(json.dumps({"error":"No doctors found."}), content_type="application/json", status=404)
 
@@ -164,6 +183,25 @@ def get_doctor(request):
 				"lon": str(doc.lon),
 				"lat": str(doc.lat)
 			})
+		response_data = {
+			"doctors": doc_array
+		}
+		return HttpResponse(json.dumps(response_data), content_type="application/json")
+	elif request.GET.get('name', '') != '':
+		doc_array = []
+		name = request.GET.get('name', '')
+		for doc in Doctor.objects.all():
+			if name in doc.name:
+				doc_array.append({
+					"doctor_id": doc.doctor_id,
+					"address": doc.address,
+					"name": doc.name,
+					"specialty": doc.specialty,
+					"days_available": doc.days_available,
+					"times_available": doc.times_available,
+					"lon": str(doc.lon),
+					"lat": str(doc.lat)
+				})
 		response_data = {
 			"doctors": doc_array
 		}
