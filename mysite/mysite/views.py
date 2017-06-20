@@ -7,6 +7,61 @@ import json
 def index(request):
 	return HttpResponse("Hello from Apollo Health.")
 
+def chatbot(request):
+	doctors = []
+	message = request.GET.get('message', '')
+	if "knee" in message and ("pain" in message or "hurt" in message):
+		d = Doctor.objects.filter(specialty="Orthopedic")
+		if d.exists():
+			for obj in d:
+				doctors.append({
+					"name":	obj.name,
+					"address": obj.address
+					})
+			if len(doctors) > 1:
+				return HttpResponse(json.dumps({"message":"Here are some doctors who can examine your knee:","doctors": doctors}), content_type="application/json")
+			else:
+				return HttpResponse(json.dumps({"message":"Here is a doctor who can examine your knee:","doctors": doctors}), content_type="application/json")
+
+	elif "head" in message and ("pain" in message or "hurt" in message):
+		d = Doctor.objects.filter(specialty="Family")
+		if d.exists():
+			for obj in d:
+				doctors.append({
+					"name":	obj.name,
+					"address": obj.address
+					})
+			if len(doctors) > 1:
+				return HttpResponse(json.dumps({"message":"Here are some doctors who can examine your head:","doctors": doctors}), content_type="application/json")
+			else:
+				return HttpResponse(json.dumps({"message":"Here is a doctor who can examine your head:","doctors": doctors}), content_type="application/json")
+	elif "leg" in message and ("pain" in message or "hurt" in message):
+		d = Doctor.objects.filter(specialty="Pediatrics")
+		if d.exists():
+			for obj in d:
+				doctors.append({
+					"name":	obj.name,
+					"address": obj.address
+					})
+			if len(doctors) > 1:
+				return HttpResponse(json.dumps({"message":"Here are some doctors who can examine your leg:","doctors": doctors}), content_type="application/json")
+			else:
+				return HttpResponse(json.dumps({"message":"Here is a doctor who can examine your leg:","doctors": doctors}), content_type="application/json")
+	elif "fever" in message:
+		d = Doctor.objects.filter(specialty="Pathology")
+		if d.exists():
+			for obj in d:
+				doctors.append({
+					"name":	obj.name,
+					"address": obj.address
+					})
+			if len(doctors) > 1:
+				return HttpResponse(json.dumps({"message":"Here are some doctors who can examine your fever:","doctors": doctors}), content_type="application/json")
+			else:
+				return HttpResponse(json.dumps({"message":"Here is a doctor who can examine your fever:","doctors": doctors}), content_type="application/json")
+
+	return HttpResponse(json.dumps({"error":"Valid response not found"}), content_type="application/json", status=404)
+
 def get_word(request):
 	return 0
 

@@ -56,4 +56,6 @@ urlpatterns = [
     url(r'^poppharm/', views.populate_pharmacies),
 
     url(r'^admin/', admin.site.urls),
+
+    url(r'^chatbot/', views.chatbot),
 ]
